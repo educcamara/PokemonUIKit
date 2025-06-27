@@ -14,7 +14,7 @@ final class PokemonAPIService: PokemonAPIServiceProtocol {
         self.networkClient = networkClient
     }
     
-    func fetchPokemonList(completion: @escaping (Result<[Pokemon], Error>) -> Void) {
+    func fetchPokemonList(completion: @escaping (Result<[PokemonModel], Error>) -> Void) {
         let urlString = "https://pokeapi.co/api/v2/pokemon?limit=151"
         
 //        networkClient.fetch(from: urlString, decodeTo: PokemonListResponse.self) { result in

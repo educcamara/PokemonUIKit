@@ -8,7 +8,7 @@
 import Foundation
 
 final class MockPokemonAPIService: PokemonAPIServiceProtocol {
-    func fetchPokemonList(completion: @escaping (Result<[Pokemon], any Error>) -> Void) {
+    func fetchPokemonList(completion: @escaping (Result<[PokemonModel], any Error>) -> Void) {
         
     }
     
