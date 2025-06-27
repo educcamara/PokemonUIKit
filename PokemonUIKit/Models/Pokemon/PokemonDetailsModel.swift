@@ -10,6 +10,6 @@ struct PokemonDetailsModel {
     let name: String
     let height: Double
     let weight: Double
-    let types: [PokemonType]
+    let types: [PokemonTypeModel]
     let imageUrl: String
 }

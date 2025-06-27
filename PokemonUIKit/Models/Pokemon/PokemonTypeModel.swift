@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-enum PokemonType: String, Codable {
+enum PokemonTypeModel: String, Codable {
     case normal
     case fire
     case water
