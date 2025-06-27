@@ -1,5 +1,11 @@
+//
+//  PokemonTypeModel.swift
+//  PokemonUIKit
+//
+//  Created by Eduardo Cordeiro da Camara on 27/06/25.
+//
+
 import Foundation
-import UIKit
 
 enum PokemonTypeModel: String, Codable {
     case normal
