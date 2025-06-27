@@ -12,7 +12,7 @@ final class MockPokemonAPIService: PokemonAPIServiceProtocol {
         
     }
     
-    func fetchPokemonDetail(from url: URL, completion: @escaping (Result<PokemonDetail, any Error>) -> Void) {
+    func fetchPokemonDetail(from url: URL, completion: @escaping (Result<PokemonDetailsModel, any Error>) -> Void) {
         
     }
 }

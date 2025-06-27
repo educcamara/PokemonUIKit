@@ -5,7 +5,7 @@
 //  Created by Eduardo Cordeiro da Camara on 27/06/25.
 //
 
-struct PokemonDetail {
+struct PokemonDetailsModel {
     let id: Int
     let name: String
     let height: Double

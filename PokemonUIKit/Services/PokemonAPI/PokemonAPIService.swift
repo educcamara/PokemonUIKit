@@ -28,7 +28,7 @@ final class PokemonAPIService: PokemonAPIServiceProtocol {
 //        }
     }
     
-    func fetchPokemonDetail(from url: URL, completion: @escaping (Result<PokemonDetail, Error>) -> Void) {
+    func fetchPokemonDetail(from url: URL, completion: @escaping (Result<PokemonDetailsModel, Error>) -> Void) {
 //        networkClient.fetch(from: url.absoluteString, decodeTo: PokemonDetailResponse.self) { result in
 //              switch result {
 //              case .success(let response):
