@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PokemonService: PokemonAPIServiceProtocol {
+final class PokemonAPIService: PokemonAPIServiceProtocol {
     let networkClient: NetworkClientProtocol
 
     init(networkClient: NetworkClientProtocol = NetworkClient()) {
