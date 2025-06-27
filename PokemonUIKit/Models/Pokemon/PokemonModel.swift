@@ -8,8 +8,8 @@
 import Foundation
 
 struct PokemonModel {
+    let id: Int
     let name: String
-    let number: Int
     let pokemonImage: String
     let pokemonUrl: URL?
 }
