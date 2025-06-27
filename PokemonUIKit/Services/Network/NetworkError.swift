@@ -7,6 +7,7 @@
 
 enum NetworkError: Error {
     case invalidURL
+    case invalidResponse
     case emptyData
     case custom(any Error)
 }
