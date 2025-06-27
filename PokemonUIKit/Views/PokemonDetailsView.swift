@@ -11,7 +11,7 @@ protocol PokemonDetailViewDelegate: AnyObject {
     func didTapFavorite()
 }
 
-class PokemonDetailView: UIView {
+class PokemonDetailsView: UIView {
     weak var delegate: PokemonDetailViewDelegate?
     
     private lazy var favoriteButton: UIButton = {
@@ -144,7 +144,7 @@ class PokemonDetailView: UIView {
         ])
     }
     
-    func configure(with pokemonDetail: PokemonDetail, isFavorited: Bool) {
+    func configure(with pokemonDetail: PokemonDetailsModel, isFavorited: Bool) {
         nameLabel.text = pokemonDetail.name
         imageView.image = UIImage(named: pokemonDetail.imageUrl)
         typeLabel.text = pokemonDetail.types.map { $0.getTitle() }.joined(separator: ", ")

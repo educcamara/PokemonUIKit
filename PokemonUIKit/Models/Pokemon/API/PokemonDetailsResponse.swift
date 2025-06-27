@@ -5,7 +5,10 @@
 //  Created by Eduardo Cordeiro da Camara on 27/06/25.
 //
 
+import Foundation
+
 struct PokemonDetailsResponse: Codable {
+    let id: Int
     let name: String
     /// Height in decimeters (10:1m)
     let height: Int
@@ -41,8 +44,12 @@ extension PokemonDetailsResponse: ResponseToDomainProtocol {
         let stats = stats.map {
             PokemonStatModel(name: $0.stat.name, baseStat: $0.baseStat)
         }
+        let imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(id).png"
         
         return PokemonDetailsModel(
+            id: id,
+            name: name,
+            imageUrl: URL(string: imageUrl),
             height: Double(height)/10,
             weight: Double(weight)/10,
             types: types,
