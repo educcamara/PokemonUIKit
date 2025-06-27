@@ -7,7 +7,22 @@
 
 import Foundation
 
-final class NetworkClient: NetworkClientProtocol {
+final class NetworkClient {
+    //MARK: Properties
+    private let session: URLSession
+    private let decoder: JSONDecoder
+    
+    init(session: URLSession = .shared) {
+        self.session = session
+        self.decoder = JSONDecoder()
+        
+        //Automatic snake_case to camelCase conversion
+        self.decoder.keyDecodingStrategy = .convertFromSnakeCase
+    }
+}
+
+//MARK: NetworkClientProtocol implementation
+extension NetworkClient: NetworkClientProtocol {
     func fetch<T: Decodable>(
         from urlString: String,
         decodeTo type: T.Type,
