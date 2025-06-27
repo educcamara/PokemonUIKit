@@ -1,4 +1,12 @@
+//
+//  PokemonDetailViewController.swift
+//  PokemonUIKit
+//
+//  Created by Eduardo Cordeiro da Camara on 27/06/25.
+//
+
 import UIKit
+
 class PokemonDetailViewController: UIViewController, PokemonDetailViewModelDelegate {
     
     private let pokemonDetailView = PokemonDetailView()
