@@ -6,10 +6,15 @@
 //
 
 struct PokemonDetailsModel {
-    let id: Int
-    let name: String
+    /// Height in meters
     let height: Double
+    /// Weight in kilograms
     let weight: Double
     let types: [PokemonTypeModel]
-    let imageUrl: String
+    let stats: [PokemonStatModel]
+}
+
+struct PokemonStatModel {
+    let name: String
+    let baseStat: Int
 }
