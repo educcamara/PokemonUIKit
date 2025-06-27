@@ -24,7 +24,7 @@ struct PokemonListItemResponse: Decodable {
 }
 
 //MARK: Reponse to DomainModel
-extension PokemonListItemResponse {
+extension PokemonListItemResponse: ResponseToDomainProtocol {
     func toDomainModel() -> PokemonModel {
         let id: Int = extractPokemonId(from: self.urlString) ?? 0
         let imageUrl = URL(string: imageUrlString(with: id))
