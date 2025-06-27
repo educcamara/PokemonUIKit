@@ -13,8 +13,3 @@ struct PokemonDetailsModel {
     let types: [PokemonTypeModel]
     let stats: [PokemonStatModel]
 }
-
-struct PokemonStatModel {
-    let name: String
-    let baseStat: Int
-}
