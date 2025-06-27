@@ -12,6 +12,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        let label = UILabel()
+        label.text = "Pokemon App"
+        label.textColor = .green
+        self.view = label
+        self.view.backgroundColor = .systemBackground
     }
 
 
