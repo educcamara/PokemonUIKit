@@ -10,6 +10,6 @@ import Foundation
 struct PokemonModel {
     let id: Int
     let name: String
-    let pokemonImage: String
-    let pokemonUrl: URL?
+    let imageUrl: String
+    let url: URL?
 }
