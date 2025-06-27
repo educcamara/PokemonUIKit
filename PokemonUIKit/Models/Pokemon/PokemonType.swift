@@ -21,48 +21,28 @@ enum PokemonType: String, Codable {
     case steel
     case fairy
     
-    func getTitle() -> String {
-        return self.rawValue.capitalized
-    }
+    var title: String { self.rawValue.capitalized }
     
-    func getColor() -> UIColor {
-        switch self {
-        case .normal:
-            return UIColor(hex: "#A8A77A")
-        case .fire:
-            return UIColor(hex: "#EE8130")
-        case .water:
-            return UIColor(hex: "#6390F0")
-        case .electric:
-            return UIColor(hex: "#F7D02C")
-        case .grass:
-            return UIColor(hex: "#7AC74C")
-        case .ice:
-            return UIColor(hex: "#96D9D6")
-        case .fighting:
-            return UIColor(hex: "#C22E28")
-        case .poison:
-            return UIColor(hex: "#A33EA1")
-        case .ground:
-            return UIColor(hex: "#E2BF65")
-        case .flying:
-            return UIColor(hex: "#A98FF3")
-        case .psychic:
-            return UIColor(hex: "#F95587")
-        case .bug:
-            return UIColor(hex: "#A6B91A")
-        case .rock:
-            return UIColor(hex: "#B6A136")
-        case .ghost:
-            return UIColor(hex: "#735797")
-        case .dragon:
-            return UIColor(hex: "#6F35FC")
-        case .dark:
-            return UIColor(hex: "#705746")
-        case .steel:
-            return UIColor(hex: "#B7B7CE")
-        case .fairy:
-            return UIColor(hex: "#D685AD")
+    var color: ColorResource {
+        return switch self {
+        case .normal: .PokemonType.normal
+        case .fire: .PokemonType.fire
+        case .water: .PokemonType.water
+        case .electric: .PokemonType.electric
+        case .grass: .PokemonType.grass
+        case .ice: .PokemonType.ice
+        case .fighting: .PokemonType.fighting
+        case .poison: .PokemonType.poison
+        case .ground: .PokemonType.ground
+        case .flying: .PokemonType.flying
+        case .psychic: .PokemonType.psychic
+        case .bug: .PokemonType.bug
+        case .rock: .PokemonType.rock
+        case .ghost: .PokemonType.ghost
+        case .dragon: .PokemonType.dragon
+        case .dark: .PokemonType.dark
+        case .steel: .PokemonType.steel
+        case .fairy: .PokemonType.fairy
         }
     }
 }
