@@ -13,4 +13,12 @@ struct PokemonListResponse: Decodable {
     let results: [PokemonListItemResponse]
 }
 
-struct PokemonListItemResponse: Decodable {}
+struct PokemonListItemResponse: Decodable {
+    let name: String
+    let urlString: String
+    
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case urlString = "url"
+    }
+}
