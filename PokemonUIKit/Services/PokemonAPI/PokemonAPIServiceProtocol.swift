@@ -9,5 +9,5 @@ import Foundation
 
 protocol PokemonAPIServiceProtocol {
     func fetchPokemonList(offset: Int, limit: Int, completion: @escaping (Result<[PokemonModel], Error>) -> Void)
-    func fetchPokemonDetail(from url: URL, completion: @escaping (Result<PokemonDetailsModel, Error>) -> Void)
+    func fetchPokemonDetails(ofId id: Int, completion: @escaping (Result<PokemonDetailsModel, Error>) -> Void)
 }

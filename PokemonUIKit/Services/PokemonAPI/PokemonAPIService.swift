@@ -28,14 +28,16 @@ final class PokemonAPIService: PokemonAPIServiceProtocol {
         }
     }
     
-    func fetchPokemonDetail(from url: URL, completion: @escaping (Result<PokemonDetailsModel, Error>) -> Void) {
-//        networkClient.fetch(from: url.absoluteString, decodeTo: PokemonDetailResponse.self) { result in
-//              switch result {
-//              case .success(let response):
-//                  completion(.success(response.toDomainModel()))
-//              case .failure(let error):
-//                  completion(.failure(error))
-//              }
-//          }
-      }
+    func fetchPokemonDetails(ofId id: Int, completion: @escaping (Result<PokemonDetailsModel, any Error>) -> Void) {
+        let urlString = "https://pokeapi.co/api/v2/pokemon/\(id)"
+        
+//        networkClient.fetch(from: urlString, decodeTo: PokemonDetailsResponse.self) { result in
+//            switch result {
+//            case .success(let response):
+//                let details = response.toDomainModel()
+//                completion(.success(details))
+//            case .failure(let error):
+//            }
+//        }
+    }
 }
