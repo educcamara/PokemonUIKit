@@ -5,7 +5,7 @@
 //  Created by Eduardo Cordeiro da Camara on 27/06/25.
 //
 
-struct PokemonDetailsResponse: Decodable {
+struct PokemonDetailsResponse: Codable {
     let name: String
     /// Height in decimeters (10:1m)
     let height: Int
@@ -15,20 +15,20 @@ struct PokemonDetailsResponse: Decodable {
     let stats: [StatElementResponse]
 }
 
-struct TypeElementResponse: Decodable {
+struct TypeElementResponse: Codable {
     let type: TypeInfoResponse
 }
 
-struct TypeInfoResponse: Decodable {
+struct TypeInfoResponse: Codable {
     let name: String
 }
 
-struct StatElementResponse: Decodable {
+struct StatElementResponse: Codable {
     let baseStat: Int
     let stat: StatInfoResponse
 }
 
-struct StatInfoResponse: Decodable {
+struct StatInfoResponse: Codable {
     let name: String
 }
 
