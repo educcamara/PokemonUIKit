@@ -7,8 +7,7 @@
 
 import Foundation
 
-class NetworkClient: NetworkClientProtocol {
-    
+final class NetworkClient: NetworkClientProtocol {
     func fetch<T: Decodable>(
         from urlString: String,
         decodeTo type: T.Type,
