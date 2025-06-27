@@ -14,18 +14,18 @@ final class PokemonAPIService: PokemonAPIServiceProtocol {
         self.networkClient = networkClient
     }
     
-    func fetchPokemonList(completion: @escaping (Result<[PokemonModel], Error>) -> Void) {
-        let urlString = "https://pokeapi.co/api/v2/pokemon?limit=151"
+    func fetchPokemonList(offset: Int = 0, limit: Int = 20, completion: @escaping (Result<[PokemonModel], any Error>) -> Void) {
+        let urlString = "https://pokeapi.co/api/v2/pokemon?limit=\(limit)&offset=\(offset)"
         
-//        networkClient.fetch(from: urlString, decodeTo: PokemonListResponse.self) { result in
-//            switch result {
-//            case .success(let response):
-//                let pokemons = response.results.map { $0.toDomainModel() }
-//                completion(.success(pokemons))
-//            case .failure(let error):
-//                completion(.failure(error))
-//            }
-//        }
+        networkClient.fetch(from: urlString, decodeTo: PokemonListResponse.self) { result in
+            switch result {
+            case .success(let response):
+                let pokemons = response.results.map { $0.toDomainModel() }
+                completion(.success(pokemons))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     func fetchPokemonDetail(from url: URL, completion: @escaping (Result<PokemonDetailsModel, Error>) -> Void) {
