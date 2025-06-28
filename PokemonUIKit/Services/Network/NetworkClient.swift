@@ -33,16 +33,13 @@ extension NetworkClient: NetworkClientProtocol {
             return
         }
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        session.dataTask(with: url) { data, response, error in
             if let error {
                 completion(.failure(.custom(error)))
                 return
             }
             
-            if let httpResponse = response as? HTTPURLResponse,
-               200...299 ~= httpResponse.statusCode {
-                completion(.failure(NetworkError.invalidResponse))
-            }
+            
 
             guard let data = data else {
                 completion(.failure(NetworkError.emptyData))
