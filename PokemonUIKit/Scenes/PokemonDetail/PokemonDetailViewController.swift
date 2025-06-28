@@ -9,7 +9,7 @@ import UIKit
 
 class PokemonDetailViewController: UIViewController, PokemonDetailViewModelDelegate {
     
-    private let pokemonDetailView = PokemonDetailView()
+    private let pokemonDetailView = PokemonDetailsView()
     private let viewModel: PokemonDetailViewModel
     
     init(url: URL?) {

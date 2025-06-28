@@ -146,17 +146,17 @@ class PokemonDetailsView: UIView {
     
     func configure(with pokemonDetail: PokemonDetailsModel, isFavorited: Bool) {
         nameLabel.text = pokemonDetail.name
-        imageView.image = UIImage(named: pokemonDetail.imageUrl)
-        typeLabel.text = pokemonDetail.types.map { $0.getTitle() }.joined(separator: ", ")
+        imageView.image = UIImage(named: pokemonDetail.imageUrl?.absoluteString ?? "")
+        typeLabel.text = pokemonDetail.types.map { $0.title }.joined(separator: ", ")
         heightLabel.text = "Height: \(pokemonDetail.height)m"
         weightLabel.text = "Weight: \(pokemonDetail.weight)kg"
         
         if let primaryType = pokemonDetail.types.first {
-            typeLabel.backgroundColor = primaryType.getColor()
-            backgroundColor = primaryType.getColor()
+            typeLabel.backgroundColor = UIColor(resource: primaryType.color)
+            backgroundColor = UIColor(resource: primaryType.color)
         }
         
-        imageView.loadImage(urlString: pokemonDetail.imageUrl)
+        imageView.loadImage(urlString: pokemonDetail.imageUrl?.absoluteString ?? "")
         
         configureButton(isFavorited: isFavorited)
     }
