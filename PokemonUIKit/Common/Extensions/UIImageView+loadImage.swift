@@ -103,12 +103,10 @@ private extension UIImageView {
         error: Error?,
         cacheKey: NSString
     ) {
-        // Clear the current task since it's completed
         currentTask = nil
         
-        // Check for errors
         if let error = error {
-            print("Image loading error: \(error.localizedDescription)")
+            logger.warning("Image loading error: \(error.localizedDescription)")
             return
         }
         
@@ -119,10 +117,12 @@ private extension UIImageView {
             return
         }
         
-        // Cache the image
         cacheImage(image, for: cacheKey)
-        
-        // Update UI on main thread
         setImage(image)
     }
 }
+
+//MARK: - Logger
+import os.log
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "UIImageView+loadImage")
