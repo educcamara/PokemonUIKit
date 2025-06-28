@@ -14,14 +14,14 @@ class PokemonListViewModel {
     
     weak var delegate: PokemonListViewModelDelegate?
     private let service: PokemonAPIServiceProtocol
-    private(set) var pokemons: [Pokemon] = []
+    private(set) var pokemons: [PokemonModel] = []
 
     init(service: PokemonAPIServiceProtocol = PokemonAPIService()) {
         self.service = service
     }
     
     func fetchPokemons() {
-        service.fetchPokemonList { [weak self] result in
+        service.fetchPokemonList(offset: 0, limit: 20) { [weak self] result in
             switch result {
             case .success(let pokemons):
                 self?.pokemons = pokemons
@@ -32,7 +32,7 @@ class PokemonListViewModel {
         }
     }
 
-    func getPokemon(at index: Int) -> Pokemon {
+    func getPokemon(at index: Int) -> PokemonModel {
         return pokemons[index]
     }
 

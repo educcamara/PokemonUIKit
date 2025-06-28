@@ -8,6 +8,8 @@
 import Foundation
 
 final class PokemonAPIService: PokemonAPIServiceProtocol {
+
+    
     let networkClient: NetworkClientProtocol
 
     init(networkClient: NetworkClientProtocol = NetworkClient()) {
@@ -32,6 +34,18 @@ final class PokemonAPIService: PokemonAPIServiceProtocol {
         let urlString = "https://pokeapi.co/api/v2/pokemon/\(id)"
         
         networkClient.fetch(from: urlString, decodeTo: PokemonDetailsResponse.self) { result in
+            switch result {
+            case .success(let response):
+                let details = response.toDomainModel()
+                completion(.success(details))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func fetchPokemonDetails(url: URL, completion: @escaping (Result<PokemonDetailsModel, any Error>) -> Void) {
+        networkClient.fetch(from: url.absoluteString, decodeTo: PokemonDetailsResponse.self) { result in
             switch result {
             case .success(let response):
                 let details = response.toDomainModel()

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol PokemonDetailViewModelDelegate: AnyObject {
-    func didLoadPokemonDetail(detail: PokemonDetail, isFavorited: Bool)
+    func didLoadPokemonDetail(detail: PokemonDetailsModel, isFavorited: Bool)
     func didFailToLoadDetail(with error: Error)
 }
 
@@ -32,11 +32,11 @@ final class PokemonDetailViewModel {
     
     func fetchPokemonDetail() {
         guard let url = url else {
-            delegate?.didFailToLoadDetail(with: ServiceError.invalidURL)
+            delegate?.didFailToLoadDetail(with: NetworkError.invalidURL)
             return
         }
         
-        service.fetchPokemonDetail(from: url) { [weak self] result in
+        service.fetchPokemonDetails(url: url) { [weak self] result in
             switch result {
             case .success(let detail):
                 self?.currentDetail = detail

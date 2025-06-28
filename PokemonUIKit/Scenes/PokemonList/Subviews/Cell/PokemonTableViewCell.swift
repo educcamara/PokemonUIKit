@@ -38,7 +38,7 @@ class PokemonTableViewCell: UITableViewCell {
         ])
     }
     
-    public func configure(with pokemon: Pokemon) {
+    public func configure(with pokemon: PokemonModel) {
         customView.configure(with: pokemon)
     }
 }

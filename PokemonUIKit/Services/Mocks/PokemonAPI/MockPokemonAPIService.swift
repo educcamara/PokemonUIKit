@@ -15,4 +15,8 @@ final class MockPokemonAPIService: PokemonAPIServiceProtocol {
     func fetchPokemonDetails(ofId id: Int, completion: @escaping (Result<PokemonDetailsModel, any Error>) -> Void) {
         
     }
+    
+    func fetchPokemonDetails(url: URL, completion: @escaping (Result<PokemonDetailsModel, any Error>) -> Void) {
+        
+    }
 }

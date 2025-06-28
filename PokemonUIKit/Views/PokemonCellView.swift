@@ -86,10 +86,10 @@ class PokemonCellView: UIView {
         ])
     }
     
-    func configure(with pokemon: Pokemon) {
+    func configure(with pokemon: PokemonModel) {
         nameLabel.text = pokemon.name
-        numberLabel.text = String(format: "#%03d", pokemon.number)
-        pokemonImageView.loadImage(urlString: pokemon.pokemonImage)
+        numberLabel.text = String(format: "#%03d", pokemon.id)
+        pokemonImageView.loadImage(urlString: pokemon.imageUrl?.absoluteString ?? "")
     }
     
     func prepareForReuse() {

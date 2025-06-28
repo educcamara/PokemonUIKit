@@ -34,7 +34,7 @@ class PokemonDetailViewController: UIViewController, PokemonDetailViewModelDeleg
     
     // MARK: - PokemonDetailViewModelDelegate
     
-    func didLoadPokemonDetail(detail: PokemonDetail, isFavorited: Bool) {
+    func didLoadPokemonDetail(detail: PokemonDetailsModel, isFavorited: Bool) {
         DispatchQueue.main.async {
             self.pokemonDetailView.configure(with: detail, isFavorited: isFavorited)
         }
