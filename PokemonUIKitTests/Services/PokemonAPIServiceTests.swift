@@ -48,7 +48,7 @@ final class PokemonAPIServiceTests: XCTestCase {
             case .success(let pokemons):
                 XCTAssertEqual(pokemons.count, 2)
                 XCTAssertEqual(pokemons[0].name, "bulbasaur")
-                XCTAssertEqual(pokemons[1].name, "ivysaur")
+                XCTAssertEqual(pokemons[1].name, "pikachu")
                 expectation.fulfill()
             case .failure:
                 XCTFail("Expected success but got failure")
@@ -231,6 +231,7 @@ final class PokemonAPIServiceTests: XCTestCase {
     
     private func createMockPokemonDetailsData() -> Data {
         return Data(from: PokemonDetailsResponse(
+            id: 1,
             name: "bulbasaur",
             height: 8,
             weight: 12,

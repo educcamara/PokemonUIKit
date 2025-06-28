@@ -48,7 +48,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
     func test_fetchPokemonDetail_whenResponseIsSuccessful_shouldLoadWithCorrectPokemon() {
         // Arrange
         let expectedPokemon = createSamplePokemon()
-        mockService.pokemonDetailResult = .success(expectedPokemon)
+        mockService.pokemonDetailsResult = .success(expectedPokemon)
         mockRepository.containsToBeReturned = true
         // Act
         sut.fetchPokemonDetail()
@@ -64,7 +64,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
     func test_fetchPokemonDetail_whenResponseFails_shouldNotifyDelegateWithError() {
         // Arrange
         enum TestError: Error { case networkError }
-        mockService.pokemonDetailResult = .failure(TestError.networkError)
+        mockService.pokemonDetailsResult = .failure(TestError.networkError)
         
         // Act
         sut.fetchPokemonDetail()
@@ -97,7 +97,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
     func test_toggleFavorite_whenPokemonIsNotFavorited_shouldAddToFavorites() {
         // Arrange
         let pokemon = createSamplePokemon(name: "bulbasaur")
-        mockService.pokemonDetailResult = .success(pokemon)
+        mockService.pokemonDetailsResult = .success(pokemon)
         mockRepository.containsToBeReturned = false
         sut.fetchPokemonDetail()
         
@@ -113,7 +113,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
     func test_toggleFavorite_whenPokemonIsFavorited_shouldRemoveFromFavorites() {
         // Arrange
         let pokemon = createSamplePokemon()
-        mockService.pokemonDetailResult = .success(pokemon)
+        mockService.pokemonDetailsResult = .success(pokemon)
         mockRepository.containsToBeReturned = true
         sut.fetchPokemonDetail()
         
@@ -140,7 +140,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
     func test_fetchPokemonDetail_whenPokemonIsFavorited_shouldPassFavoritedStatusToDelegate() {
         // Arrange
         let pokemon = createSamplePokemon()
-        mockService.pokemonDetailResult = .success(pokemon)
+        mockService.pokemonDetailsResult = .success(pokemon)
         
         // Primeiro carregamento - não favoritado
         mockRepository.containsToBeReturned = false
@@ -162,7 +162,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
         let pikachu = createSamplePokemon(id: 25, name: "Pikachu")
         
         // Primeiro carregamento - Bulbasaur não favoritado
-        mockService.pokemonDetailResult = .success(bulbasaur)
+        mockService.pokemonDetailsResult = .success(bulbasaur)
         mockRepository.containsToBeReturned = false
         sut.fetchPokemonDetail()
         
@@ -171,7 +171,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
         
         
         // Configurar para Pikachu
-        mockService.pokemonDetailResult = .success(pikachu)
+        mockService.pokemonDetailsResult = .success(pikachu)
         // Simular que apenas Bulbasaur está favoritado
         mockRepository.containsToBeReturned = false
         
@@ -184,14 +184,15 @@ final class PokemonDetailViewModelTests: XCTestCase {
         XCTAssertFalse(mockDelegate.loadedIsFavorited)
     }
     
-    func createSamplePokemon(id: Int = 1, name: String = "Bulbasaur") -> PokemonDetail {
-        return PokemonDetail(
+    func createSamplePokemon(id: Int = 1, name: String = "Bulbasaur") -> PokemonDetailsModel {
+        return PokemonDetailsModel(
             id: id,
             name: name,
+            imageUrl: URL(string: "https://example.com/bulbasaur.png"),
             height: 7.0,
             weight: 69.0,
             types: [.grass],
-            imageUrl: "https://example.com/bulbasaur.png"
+            stats: [.init(name: "hp", baseStat: 60)]
         )
     }
 }
