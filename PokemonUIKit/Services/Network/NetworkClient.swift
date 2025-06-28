@@ -32,26 +32,36 @@ extension NetworkClient: NetworkClientProtocol {
             completion(.failure(NetworkError.invalidURL))
             return
         }
+        
+        var request = URLRequest(url: url, timeoutInterval: 10)
+        request.httpMethod = "GET"
 
-        session.dataTask(with: url) { data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
+            guard let self else { return }
             if let error {
+                logger.warning("Error fetching data: \(error) [\(error.localizedDescription)]")
                 completion(.failure(.custom(error)))
                 return
             }
-            
-            
 
-            guard let data = data else {
+            guard let data else {
+                logger.warning("No data returned from the server")
                 completion(.failure(NetworkError.emptyData))
                 return
             }
 
             do {
-                let decoded = try JSONDecoder().decode(T.self, from: data)
+                let decoded = try self.decoder.decode(T.self, from: data)
                 completion(.success(decoded))
             } catch {
+                logger.warning("Could not decode data from server")
                 completion(.failure(.custom(error)))
             }
         }.resume()
     }
 }
+
+//MARK: - Logger
+import os.log
+
+private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "NetworkClient")
