@@ -5,7 +5,7 @@
 //  Created by Eduardo Cordeiro da Camara on 27/06/25.
 //
 
-@testable import MentoriaUIKitbasico
+@testable import PokemonUIKit
 import XCTest
 
 final class PokemonListViewModelTests: XCTestCase {
