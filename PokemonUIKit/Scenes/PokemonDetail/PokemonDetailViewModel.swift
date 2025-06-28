@@ -13,16 +13,16 @@ protocol PokemonDetailViewModelDelegate: AnyObject {
 }
 
 final class PokemonDetailViewModel {
-    private let service: PokemonServiceProtocol
+    private let service: PokemonAPIServiceProtocol
     private let url: URL?
     private let repository: FavoritePokemonRepositoryProtocol
     
     weak var delegate: PokemonDetailViewModelDelegate?
-    private var currentDetail: PokemonDetail?
+    private var currentDetail: PokemonDetailsModel?
     
     init(
         url: URL?,
-        service: PokemonServiceProtocol = PokemonService(),
+        service: PokemonAPIServiceProtocol = PokemonAPIService(),
         repository: FavoritePokemonRepositoryProtocol = FavoritePokemonUserDefaultsRepository.shared
     ) {
         self.url = url

@@ -13,10 +13,10 @@ protocol PokemonListViewModelDelegate: AnyObject {
 class PokemonListViewModel {
     
     weak var delegate: PokemonListViewModelDelegate?
-    private let service: PokemonServiceProtocol
+    private let service: PokemonAPIServiceProtocol
     private(set) var pokemons: [Pokemon] = []
 
-    init(service: PokemonServiceProtocol = PokemonService()) {
+    init(service: PokemonAPIServiceProtocol = PokemonAPIService()) {
         self.service = service
     }
     
