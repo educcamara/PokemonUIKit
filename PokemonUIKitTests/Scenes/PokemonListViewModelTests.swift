@@ -28,11 +28,11 @@ final class PokemonListViewModelTests: XCTestCase {
     
     func test_fetchPokemons_whenSuccess_shouldNotifyDelegateAndStoreData() {
             // Given
-            let pokemon = Pokemon(
+            let pokemon = PokemonModel(
+                id: 1,
                 name: "bulbasaur",
-                number: 1,
-                pokemonImage: "bulbasaur.png",
-                pokemonUrl: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")
+                imageUrl:  URL(string: "http://pokemon.com/bulbasaur.png"),
+                url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")
             )
             mockService.result = .success([pokemon])
 
@@ -43,25 +43,29 @@ final class PokemonListViewModelTests: XCTestCase {
             XCTAssertTrue(mockDelegate.didUpdateCalled)
             XCTAssertEqual(sut.numberOfPokemons, 1)
             XCTAssertEqual(sut.getPokemon(at: 0).name, "bulbasaur")
-            XCTAssertEqual(sut.getPokemon(at: 0).number, 1)
-            XCTAssertEqual(sut.getPokemon(at: 0).pokemonImage, "bulbasaur.png")
-            XCTAssertEqual(sut.getPokemon(at: 0).pokemonUrl, URL(string: "https://pokeapi.co/api/v2/pokemon/1/"))
+            XCTAssertEqual(sut.getPokemon(at: 0).id, 1)
+            XCTAssertEqual(sut.getPokemon(at: 0).url, URL(string: "https://pokeapi.co/api/v2/pokemon/1/"))
         }
 
         func test_fetchPokemons_whenFailure_shouldNotifyDelegateWithError() {
             // Given
-            mockService.result = .failure(ServiceError.emptyData)
+            mockService.result = .failure(NetworkError.emptyData)
 
             // When
             sut.fetchPokemons()
 
             // Then
             XCTAssertTrue(mockDelegate.didFailCalled)
-            XCTAssertEqual(mockDelegate.errorMessage, ServiceError.emptyData.localizedDescription)
+            XCTAssertEqual(mockDelegate.errorMessage, NetworkError.emptyData.localizedDescription)
         }
 
         func test_numberOfPokemons_shouldReturnCorrectCount() {
-            mockService.result = .success([.mock(), .mock(), .mock(), .mock()])
+            mockService.result = .success([
+                .init(id: 0, name: "a", imageUrl: nil, url: nil),
+                .init(id: 0, name: "b", imageUrl: nil, url: nil),
+                .init(id: 0, name: "c", imageUrl: nil, url: nil),
+                .init(id: 0, name: "d", imageUrl: nil, url: nil),
+            ])
             
             // When
             sut.fetchPokemons()
@@ -72,7 +76,12 @@ final class PokemonListViewModelTests: XCTestCase {
 
         func test_pokemonAt_shouldReturnCorrectPokemon() {
             // Given
-            let mewtwo = Pokemon(name: "mewtwo", number: 150, pokemonImage: "mewtwo.png", pokemonUrl: nil)
+            let mewtwo = PokemonModel(
+                id: 150,
+                name: "mewtwo",
+                imageUrl: URL(string: "http://pokemon.com/mewtwo.png"),
+                url: nil)
+            
             mockService.result = .success([mewtwo])
 
             // When
@@ -80,8 +89,7 @@ final class PokemonListViewModelTests: XCTestCase {
             let result = sut.getPokemon(at: 0)
 
             // Then
+            XCTAssertEqual(result.id, 150)
             XCTAssertEqual(result.name, "mewtwo")
-            XCTAssertEqual(result.number, 150)
-            XCTAssertEqual(result.pokemonImage, "mewtwo.png")
         }
 }

@@ -26,11 +26,11 @@ final class MockPokemonListDelegate: PokemonListViewModelDelegate {
 final class MockPokemonDetailDelegate: PokemonDetailViewModelDelegate {
     var didLoadDetailCalled = false
     var didFailCalled = false
-    var loadedDetail: PokemonDetail?
+    var loadedDetail: PokemonDetailsModel?
     var loadedIsFavorited: Bool = false
     var failedWithError: Error?
     
-    func didLoadPokemonDetail(detail: PokemonDetail, isFavorited: Bool) {
+    func didLoadPokemonDetail(detail: PokemonDetailsModel, isFavorited: Bool) {
         didLoadDetailCalled = true
         loadedDetail = detail
         loadedIsFavorited = isFavorited

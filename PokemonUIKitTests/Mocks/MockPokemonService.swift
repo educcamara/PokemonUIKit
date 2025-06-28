@@ -8,19 +8,24 @@
 @testable import PokemonUIKit
 import Foundation
 
-final class MockPokemonService: PokemonServiceProtocol {
-    var result: Result<[Pokemon], Error>?
+final class MockPokemonService: PokemonAPIServiceProtocol {
+    var result: Result<[PokemonModel], Error>?
+    var pokemonDetailsResult: Result<PokemonUIKit.PokemonDetailsModel, Error>?
     
-    func fetchPokemonList(completion: @escaping (Result<[Pokemon], Error>) -> Void) {
+    func fetchPokemonList(offset: Int, limit: Int, completion: @escaping (Result<[PokemonUIKit.PokemonModel], any Error>) -> Void) {
         if let result = result {
             completion(result)
         }
     }
     
-    var pokemonDetailResult: Result<PokemonDetail, Error>?
+    func fetchPokemonDetails(ofId id: Int, completion: @escaping (Result<PokemonUIKit.PokemonDetailsModel, any Error>) -> Void) {
+        if let result = pokemonDetailsResult {
+            completion(result)
+        }
+    }
     
-    func fetchPokemonDetail(from url: URL, completion: @escaping (Result<PokemonDetail, Error>) -> Void) {
-        if let result = pokemonDetailResult {
+    func fetchPokemonDetails(url: URL, completion: @escaping (Result<PokemonUIKit.PokemonDetailsModel, any Error>) -> Void) {
+        if let result = pokemonDetailsResult {
             completion(result)
         }
     }
