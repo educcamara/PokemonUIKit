@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 enum PokemonTypeModel: String, Codable {
     case normal
