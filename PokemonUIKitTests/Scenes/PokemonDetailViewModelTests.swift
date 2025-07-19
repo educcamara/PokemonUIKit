@@ -14,7 +14,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
     var mockService: MockPokemonService!
     var mockDelegate: MockPokemonDetailDelegate!
     var mockRepository: MockFavoritePokemonRepository!
-    var sut: PokemonDetailViewModel!
+    var sut: PokemonDetailsViewModel!
     var mockURL: URL!
     
     // MARK: - Setup e Teardown
@@ -26,7 +26,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
         mockURL = URL(string: "https://pokeapi.co/api/v2/pokemon/1")
         mockRepository = MockFavoritePokemonRepository()
         
-        sut = PokemonDetailViewModel(
+        sut = PokemonDetailsViewModel(
             url: mockURL,
             service: mockService,
             repository: mockRepository
@@ -77,7 +77,7 @@ final class PokemonDetailViewModelTests: XCTestCase {
     
     func test_fetchPokemonDetail_whenURLIsNil_shouldNotifyDelegateWithError() {
         // Arrange
-        sut = PokemonDetailViewModel(
+        sut = PokemonDetailsViewModel(
             url: nil,
             service: mockService,
             repository: mockRepository

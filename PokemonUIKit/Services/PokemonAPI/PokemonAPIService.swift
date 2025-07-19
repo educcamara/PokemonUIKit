@@ -8,21 +8,22 @@
 import Foundation
 
 final class PokemonAPIService: PokemonAPIServiceProtocol {
-
     
     let networkClient: NetworkClientProtocol
+    var cursor = (offset: 0, limit: 20)
 
     init(networkClient: NetworkClientProtocol = NetworkClient()) {
         self.networkClient = networkClient
     }
     
     func fetchPokemonList(offset: Int = 0, limit: Int = 20, completion: @escaping (Result<[PokemonModel], any Error>) -> Void) {
-        let urlString = "https://pokeapi.co/api/v2/pokemon?limit=\(limit)&offset=\(offset)"
+        let urlString = PokemonAPIEndpoint.pokemonList(limit: limit, offset: offset).absoluteString
         
-        networkClient.fetch(from: urlString, decodeTo: PokemonListResponse.self) { result in
+        networkClient.fetch(from: urlString, decodeTo: PokemonListResponse.self) { [weak self] result in
             switch result {
             case .success(let response):
                 let pokemons = response.results.map { $0.toDomainModel() }
+                self?.cursor = (offset: offset + limit, limit: limit)
                 completion(.success(pokemons))
             case .failure(let error):
                 completion(.failure(error))
@@ -30,8 +31,24 @@ final class PokemonAPIService: PokemonAPIServiceProtocol {
         }
     }
     
+    func fetchNextPokemonPage(limit: Int = 20, completion: @escaping (Result<[PokemonModel], any Error>) -> Void) {
+        let urlString = PokemonAPIEndpoint.pokemonList(limit: limit, offset: cursor.offset).absoluteString
+        
+        networkClient.fetch(from: urlString, decodeTo: PokemonListResponse.self) { [weak self] result in
+            switch result {
+            case .success(let response):
+                let pokemons = response.results.map { $0.toDomainModel() }
+                if let self {
+                    self.cursor = (offset: self.cursor.offset + limit, limit: limit)
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func fetchPokemonDetails(ofId id: Int, completion: @escaping (Result<PokemonDetailsModel, any Error>) -> Void) {
-        let urlString = "https://pokeapi.co/api/v2/pokemon/\(id)"
+        let urlString = PokemonAPIEndpoint.pokemonDetails(for: id).absoluteString
         
         networkClient.fetch(from: urlString, decodeTo: PokemonDetailsResponse.self) { result in
             switch result {

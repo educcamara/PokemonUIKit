@@ -6,18 +6,18 @@
 //
 
 import UIKit
+import SwiftUICore
 
 class PokemonCellView: UIView {
     
+    //MARK: - Components
     private let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.clipsToBounds = true
         view.layer.cornerRadius = 12
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.1
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 4
+        view.layer.cornerCurve = .continuous
+        
         return view
     }()
     
@@ -54,56 +54,154 @@ class PokemonCellView: UIView {
         return stack
     }()
     
+    //MARK: - Lifecycle
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupLayout()
+        setup()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: - Dependency Injection
+    func configure(with pokemon: PokemonModel) {
+        nameLabel.text = pokemon.name.capitalized
+        numberLabel.text = String(format: "#%03d", pokemon.id)
+        
+        if let urlString = pokemon.imageUrl?.absoluteString {
+            animateImageDownload(with: urlString)
+        }
+    }
+    
+    func prepareForReuse() {
+        nameLabel.text = nil
+        numberLabel.text = nil
+        pokemonImageView.image = nil
+    }
+    
+    func setSelected(_ selected: Bool, animated: Bool) {
+        let action: () -> Void = {
+            if selected {
+                self.containerView.backgroundColor = .systemGray5
+            } else {
+                self.containerView.backgroundColor = .systemBackground
+            }
+        }
+        
+        if animated {
+            UIView.animate(withDuration: 0.15, animations: action)
+        } else {
+            action()
+        }
+    }
+}
 
-    private func setupLayout() {
+//MARK: - ViewCode Implementation
+
+extension PokemonCellView: ViewCode {
+    func addSubviews() {
         addSubview(containerView)
         containerView.addSubview(pokemonImageView)
         containerView.addSubview(infoStackView)
-
+    }
+    
+    func setupConstraints() {
+        containerView.pin(to: self)
+        
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
-
             pokemonImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
             pokemonImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
             pokemonImageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
             pokemonImageView.widthAnchor.constraint(equalToConstant: 90),
             pokemonImageView.heightAnchor.constraint(equalToConstant: 90),
-
+            
             infoStackView.leadingAnchor.constraint(equalTo: pokemonImageView.trailingAnchor, constant: 16),
             infoStackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             infoStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
         ])
     }
     
-    func configure(with pokemon: PokemonModel) {
-        nameLabel.text = pokemon.name
-        numberLabel.text = String(format: "#%03d", pokemon.id)
-        pokemonImageView.loadImage(urlString: pokemon.imageUrl?.absoluteString ?? "")
+    func setupStyle() {
+        containerView.backgroundColor = .systemBackground
+        
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.shadowOpacity = 0.1
+        layer.shadowRadius = 4
     }
-    
-    func prepareForReuse() {
-        pokemonImageView.image = nil
-        nameLabel.text = nil
-        numberLabel.text = nil
-    }
-    
-    private func loadImage(from url: URL) {
-           URLSession.shared.dataTask(with: url) { data, _, _ in
-               guard let data, let image = UIImage(data: data) else { return }
-               DispatchQueue.main.async {
-                   self.pokemonImageView.image = image
-               }
-           }.resume()
-       }
 }
+
+//MARK: - Private Methods
+
+private extension PokemonCellView {
+    func animateImageDownload(with urlString: String) {
+        // Before loading
+        pokemonImageView.transform = CGAffineTransform(translationX: -100, y: 0)
+        pokemonImageView.layer.opacity = 0
+        
+        pokemonImageView.loadImage(urlString: urlString) { _ in
+            // After loading
+            DispatchQueue.main.async {
+                if #available(iOS 18.0, *) {
+                    UIView.animate(Animation.smooth(duration: 0.6, extraBounce: 0.2)) { [weak self] in
+                        self?.pokemonImageView.transform = .identity
+                        self?.pokemonImageView.layer.opacity = 1
+                    }
+                } else {             UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseOut]) { [weak self] in
+                    self?.pokemonImageView.transform = .identity
+                    self?.pokemonImageView.layer.opacity = 1
+                }
+                }
+            }
+        }
+    }
+}
+
+#if DEBUG
+//MARK: - Preview
+private class PokemonCellViewController: UIViewController {
+    let pokemons: [PokemonModel]
+    
+    init(pokemons: [PokemonModel]) {
+        self.pokemons = pokemons
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        let pokemonViews: [PokemonCellView] = pokemons.map { pokemon in
+            let view = PokemonCellView()
+            view.configure(with: pokemon)
+            view.heightAnchor.constraint(equalToConstant: 100).isActive = true
+            
+            return view
+        }
+        
+        let stackView = UIStackView(arrangedSubviews: pokemonViews)
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(stackView)
+        stackView.pin(edges: .horizontal, to: view.safeAreaLayoutGuide, withPadding: 16)
+        stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        
+        view.backgroundColor = .systemGray6
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview {
+    PokemonCellViewController(pokemons: [
+        .mockBulbasaur,
+        .mockGyarados,
+        .mockMewtwo,
+    ])
+}
+#endif

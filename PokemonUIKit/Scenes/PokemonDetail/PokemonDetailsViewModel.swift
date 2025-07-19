@@ -7,30 +7,50 @@
 
 import Foundation
 
-protocol PokemonDetailViewModelDelegate: AnyObject {
+protocol PokemonDetailsViewModelDelegate: AnyObject {
+    func didReceiveCachedPokemon(_ pokemon: PokemonModel)
     func didLoadPokemonDetail(detail: PokemonDetailsModel, isFavorited: Bool)
     func didFailToLoadDetail(with error: Error)
 }
 
-final class PokemonDetailViewModel {
-    private let service: PokemonAPIServiceProtocol
+final class PokemonDetailsViewModel {
+    //MARK: Properties
     private let url: URL?
+    private let pokemon: PokemonModel?
+    private let service: PokemonAPIServiceProtocol
     private let repository: FavoritePokemonRepositoryProtocol
-    
-    weak var delegate: PokemonDetailViewModelDelegate?
     private var currentDetail: PokemonDetailsModel?
     
+    weak var delegate: PokemonDetailsViewModelDelegate?
+    
+    //MARK: LifeCycle
     init(
         url: URL?,
         service: PokemonAPIServiceProtocol = PokemonAPIService(),
         repository: FavoritePokemonRepositoryProtocol = FavoritePokemonUserDefaultsRepository.shared
     ) {
         self.url = url
+        self.pokemon = nil
+        self.service = service
+        self.repository = repository
+    }
+    
+    init(
+        pokemon: PokemonModel,
+        service: PokemonAPIServiceProtocol = PokemonAPIService(),
+        repository: FavoritePokemonRepositoryProtocol = FavoritePokemonUserDefaultsRepository.shared
+    ) {
+        self.url = pokemon.url
+        self.pokemon = pokemon
         self.service = service
         self.repository = repository
     }
     
     func fetchPokemonDetail() {
+        if let pokemon {
+            delegate?.didReceiveCachedPokemon(pokemon)
+        }
+        
         guard let url = url else {
             delegate?.didFailToLoadDetail(with: NetworkError.invalidURL)
             return

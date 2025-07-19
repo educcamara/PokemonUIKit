@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol PokemonDetailViewDelegate: AnyObject {
+protocol PokemonDetailsViewDelegate: AnyObject {
     func didTapFavorite()
 }
 
 class PokemonDetailsView: UIView {
-    weak var delegate: PokemonDetailViewDelegate?
+    weak var delegate: PokemonDetailsViewDelegate?
     
     private lazy var favoriteButton: UIButton = {
         let button = UIButton(type: .system)
@@ -145,20 +145,33 @@ class PokemonDetailsView: UIView {
     }
     
     func configure(with pokemonDetail: PokemonDetailsModel, isFavorited: Bool) {
-        nameLabel.text = pokemonDetail.name
-        imageView.image = UIImage(named: pokemonDetail.imageUrl?.absoluteString ?? "")
-        typeLabel.text = pokemonDetail.types.map { $0.title }.joined(separator: ", ")
-        heightLabel.text = "Height: \(pokemonDetail.height)m"
-        weightLabel.text = "Weight: \(pokemonDetail.weight)kg"
+        UIView.animate(withDuration: 0.3) {
+            self.nameLabel.text = pokemonDetail.name.capitalized
+            self.imageView.image = UIImage(named: pokemonDetail.imageUrl?.absoluteString ?? "")
+            self.typeLabel.text = pokemonDetail.types.map { $0.title }.joined(separator: ", ")
+            self.heightLabel.text = "Height: \(pokemonDetail.height)m"
+            self.weightLabel.text = "Weight: \(pokemonDetail.weight)kg"
         
-        if let primaryType = pokemonDetail.types.first {
-            typeLabel.backgroundColor = UIColor(resource: primaryType.color)
-            backgroundColor = UIColor(resource: primaryType.color)
+            if let primaryType = pokemonDetail.types.first {
+                self.typeLabel.backgroundColor = UIColor(resource: primaryType.color)
+                self.backgroundColor = UIColor(resource: primaryType.color)
+            } else {
+                self.backgroundColor = .systemGray6
+            }
+            self.layoutIfNeeded()
         }
         
         imageView.loadImage(urlString: pokemonDetail.imageUrl?.absoluteString ?? "")
         
         configureButton(isFavorited: isFavorited)
+    }
+    
+    func configure(with pokemon: PokemonModel) {
+        nameLabel.text = pokemon.name
+        imageView.image = UIImage(named: pokemon.imageUrl?.absoluteString ?? "")
+        backgroundColor = .systemGray6
+        
+        imageView.loadImage(urlString: pokemon.imageUrl?.absoluteString ?? "")
     }
     
     private func configureButton(isFavorited: Bool) {

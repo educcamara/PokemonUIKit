@@ -1,5 +1,5 @@
 //
-//  PokemonDetailViewController.swift
+//  PokemonDetailsViewController.swift
 //  PokemonUIKit
 //
 //  Created by Eduardo Cordeiro da Camara on 27/06/25.
@@ -7,13 +7,20 @@
 
 import UIKit
 
-class PokemonDetailViewController: UIViewController, PokemonDetailViewModelDelegate {
+class PokemonDetailsViewController: UIViewController {
     
     private let pokemonDetailView = PokemonDetailsView()
-    private let viewModel: PokemonDetailViewModel
+    private let viewModel: PokemonDetailsViewModel
     
     init(url: URL?) {
-        self.viewModel = PokemonDetailViewModel(url: url)
+        self.viewModel = PokemonDetailsViewModel(url: url)
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel.delegate = self
+        self.pokemonDetailView.delegate = self
+    }
+    
+    init(cachedPokemon pokemon: PokemonModel) {
+        self.viewModel = PokemonDetailsViewModel(pokemon: pokemon)
         super.init(nibName: nil, bundle: nil)
         self.viewModel.delegate = self
         self.pokemonDetailView.delegate = self
@@ -31,8 +38,16 @@ class PokemonDetailViewController: UIViewController, PokemonDetailViewModelDeleg
         super.viewDidLoad()
         viewModel.fetchPokemonDetail()
     }
+}
     
-    // MARK: - PokemonDetailViewModelDelegate
+// MARK: - PokemonDetailViewModelDelegate
+    
+extension PokemonDetailsViewController: PokemonDetailsViewModelDelegate {
+    func didReceiveCachedPokemon(_ pokemon: PokemonModel) {
+        DispatchQueue.main.async {
+            self.pokemonDetailView.configure(with: pokemon)
+        }
+    }
     
     func didLoadPokemonDetail(detail: PokemonDetailsModel, isFavorited: Bool) {
         DispatchQueue.main.async {
@@ -55,7 +70,7 @@ extension UIViewController {
     }
 }
 
-extension PokemonDetailViewController: PokemonDetailViewDelegate {
+extension PokemonDetailsViewController: PokemonDetailsViewDelegate {
     func didTapFavorite() {
         viewModel.toggleFavorite()
     }

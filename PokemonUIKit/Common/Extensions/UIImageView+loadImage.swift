@@ -34,23 +34,25 @@ extension UIImageView {
     /// - Parameters:
     ///   - urlString: The URL string of the image to load
     ///   - placeholder: Optional placeholder image to show while loading
-    func loadImage(urlString: String, placeholder: UIImage? = nil) {
+    ///   - completion: Optional completion when image fetch from cache or download completes
+    func loadImage(
+        urlString: String,
+        placeholder: UIImage? = nil,
+        completion: ((Result<UIImage, Error>) -> Void)? = nil
+    ) {
         cancelImageLoading()
-        
-        guard let url = URL(string: urlString) else {
-            setImage(placeholder)
-            return
-        }
-        
+
+        // Tries to get from cache
         let cacheKey = urlString as NSString
-        
         if let cachedImage = getCachedImage(for: cacheKey) {
             setImage(cachedImage)
+            completion?(.success(cachedImage))
             return
         }
         
+        // Fetches from URL
         setImage(placeholder)
-        startImageDownload(from: url, cacheKey: cacheKey)
+        downloadImage(from: urlString, cacheKey: cacheKey, completion: completion)
     }
     
     /// Cancels any ongoing image loading task
@@ -80,45 +82,40 @@ private extension UIImageView {
         }
     }
     
-    func startImageDownload(from url: URL, cacheKey: NSString) {
-        let request = URLRequest(url: url)
+    func downloadImage(
+        from urlString: String,
+        cacheKey: NSString,
+        completion: ((Result<UIImage, Error>) -> Void)?
+    ) {
+        guard let url = URL(string: urlString) else {
+            completion?(.failure(NetworkError.invalidURL))
+            return
+        }
         
+        let request = URLRequest(url: url)
         currentTask = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            guard let self = self else { return }
+            guard let self else { return }
+            currentTask = nil
             
-            self.handleImageDownloadResponse(
-                data: data,
-                response: response,
-                error: error,
-                cacheKey: cacheKey
-            )
+            if let error {
+                logger.warning("Image loading error: \(error.localizedDescription)")
+                completion?(.failure(NetworkError.custom(error)))
+                return
+            }
+            
+            guard let data,
+                  let image = UIImage(data: data) else {
+                logger.warning("Invalid image data received")
+                completion?(.failure(NetworkError.custom(URLError(URLError.cannotDecodeRawData))))
+                return
+            }
+            
+            cacheImage(image, for: cacheKey)
+            setImage(image)
+            completion?(.success(image))
         }
         
         currentTask?.resume()
-    }
-    
-    func handleImageDownloadResponse(
-        data: Data?,
-        response: URLResponse?,
-        error: Error?,
-        cacheKey: NSString
-    ) {
-        currentTask = nil
-        
-        if let error = error {
-            logger.warning("Image loading error: \(error.localizedDescription)")
-            return
-        }
-        
-        // Validate and process the image data
-        guard let data = data,
-              let image = UIImage(data: data) else {
-            print("Invalid image data received")
-            return
-        }
-        
-        cacheImage(image, for: cacheKey)
-        setImage(image)
     }
 }
 

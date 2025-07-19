@@ -23,7 +23,7 @@ final class MockPokemonListDelegate: PokemonListViewModelDelegate {
    }
 
 
-final class MockPokemonDetailDelegate: PokemonDetailViewModelDelegate {
+final class MockPokemonDetailDelegate: PokemonDetailsViewModelDelegate {
     var didLoadDetailCalled = false
     var didFailCalled = false
     var loadedDetail: PokemonDetailsModel?
